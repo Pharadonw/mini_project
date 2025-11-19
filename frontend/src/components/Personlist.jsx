@@ -2,13 +2,13 @@ import { useState } from "react";
 
 function Personlist() {
 
-  const name = "fah";
-  const [age, setAge] = useState(30);
+  const name = "North";
+  const [age, setAge] = useState(22);
 
   return (
     <>
       <h1> ชื่อ {name}</h1>
-      <h3> อายุ {age} ปี</h3>
+      <h2> อายุ {age} ปี</h2>
 
       <button> Up </button>
       <button> Down </button>
@@ -16,5 +16,4 @@ function Personlist() {
     </>
   );
 }
-
 export default Personlist;

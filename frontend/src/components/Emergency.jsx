@@ -4,12 +4,12 @@ function Emergency() {
   const [patients, setPatients] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/patient")
-      .then(res => res.json())
-      .then(data => {
+    fetch("/api/patient")
+      .then((res) => res.json())
+      .then((data) => {
         setPatients(data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error fetching data:", err);
       });
   }, []);
@@ -33,4 +33,4 @@ function Emergency() {
   );
 }
 
-export default Emergency ;
+export default Emergency;

@@ -7,12 +7,7 @@ function Personlist() {
 
   return (
     <>
-      <h1> ชื่อ {name}</h1>
-      <h2> อายุ {age} ปี</h2>
-
-      <button> Up </button>
-      <button> Down </button>
-      
+    <h1> Personlist is Here ! </h1>
     </>
   );
 }

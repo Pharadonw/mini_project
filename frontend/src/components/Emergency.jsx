@@ -16,7 +16,7 @@ function Emergency() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>รายชื่อผู้ป่วย</h1>
+      <h1>รายชื่อผู้ป่วย Emer </h1>
 
       {patients.length === 0 ? (
         <p>กำลังโหลดข้อมูล...</p>

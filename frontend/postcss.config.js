@@ -1,6 +1,6 @@
-// postcss.config.js
+// postcss.config.js  (ESM)
+import tailwindcss from "@tailwindcss/postcss";
+
 export default {
-  plugins: {
-    "@tailwindcss/postcss": {},   // ✅ ใช้ตัวนี้ตัวเดียวพอ
-  },
+  plugins: [tailwindcss],
 };

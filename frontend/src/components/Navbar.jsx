@@ -1,22 +1,18 @@
-// src/components/Bar.jsx
+import { NavLink } from "react-router-dom";
 import React from "react";
 import Logo from "../assets/img/Logo1.png";
 
-export default function Bar() {
-  return (
-    <nav className="bg-yellow-200 text-gray-900 border-b border-gray-300">
-      <div className="container mx-auto max-w-[1320px] relative h-auto p-4 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2">
-          <img src={Logo} alt="Logo" className="h-10 w-auto" />
-          <span className="font-semibold text-lg">My App</span>
-        </a>
+const cls = (is) => (is ? "btn btn-sm btn-primary" : "btn btn-sm btn-ghost");
 
-        <ul className="flex items-center gap-6">
-          <li><a href="#" className="link link-hover">Home</a></li>
-          <li><a href="#" className="link link-hover">About</a></li>
-          <li><a href="#" className="btn btn-sm btn-primary text-white">Button</a></li>
-        </ul>
+
+export default function Navbar() {
+  return (
+    <div className="w-full border-b bg-base-100">
+      <div className="max-w-6xl mx-auto p-2 flex gap-12">
+        <NavLink to="/"          className={({isActive})=>cls(isActive)}>หน้าหลัก</NavLink> 
+        <NavLink to="/dashboard" className={({isActive})=>cls(isActive)}>Admit</NavLink>
+        <NavLink to="/er-daily"  className={({isActive})=>cls(isActive)}>Refer</NavLink>
       </div>
-    </nav>
+    </div>
   );
 }

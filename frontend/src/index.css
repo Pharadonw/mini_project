@@ -1,1 +1,11 @@
+/* โหลด Tailwind v4 */
 @import "tailwindcss";
+
+/* ชี้ไฟล์ที่ต้องสแกนคลาส (แทน content:[] เดิม) */
+@source "../index.html";
+@source "./**/*.{js,jsx,ts,tsx}";
+
+/* เปิด DaisyUI v5 (วิธีใหม่ใน v4 ใช้ @plugin) */
+@plugin "daisyui";
+
+/* (ตัวเลือก) ตั้งธีมหรือ custom variables เพิ่มได้ภายหลังด้วย @theme */

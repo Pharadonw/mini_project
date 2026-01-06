@@ -1,13 +1,13 @@
 import React from 'react'
 
-function ER_case() {
+function Refer() {
   return (
     
     <div>
-      ER_case Is Here !
+      Refer Is Here !
       
     </div>
   )
 }
 
-export default ER_case
+export default Refer

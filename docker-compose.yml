@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------
+  # 1. Backend (Node.js) - ปรับปรุงจากของคุณ
+  # -------------------------------------------------------
+  backend:
+    build: ./Backend   # (เช็คชื่อโฟลเดอร์ให้ตรงนะครับ ตัวเล็ก/ใหญ่มีผล)
+    container_name: my-app-backend
+    # เราไม่จำเป็นต้อง map ports ออกมาข้างนอกก็ได้ เพราะ Nginx จะคุยผ่าน network ภายใน
+    # แต่ถ้าจะเปิดไว้เทส API ตรงๆ ก็ใส่ไว้ได้ครับ
+    ports:
+      - "3000:3000" 
+    environment:
+      - DB_HOST=db      # ชื่อนี้ต้องตรงกับชื่อ service db ด้านล่าง
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=3306
+      - PORT=3000
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # -------------------------------------------------------
+  # 2. Database (MySQL) - เพิ่มส่วนนี้เข้ามา
+  # -------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: hospital-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - mysql_data:/var/lib/mysql # เก็บข้อมูลถาวร ไม่หายเมื่อปิด Docker
+    networks:
+      - app-network
+
+  # -------------------------------------------------------
+  # 3. Nginx (Frontend + Gateway) - พระเอกคนใหม่
+  # -------------------------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: hospital-nginx
+    ports:
+      - "80:80" # เปิดประตูหน้าบ้านที่ Port 80 (HTTP ปกติ)
+    volumes:
+      # จุดสำคัญ 1: เอาไฟล์ React ที่ build แล้ว (dist) มาใส่ให้ Nginx
+      - ./frontend/dist:/usr/share/nginx/html 
+      # จุดสำคัญ 2: เอาไฟล์ตั้งค่าที่เราเขียนเมื่อกี้ มาใส่
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf 
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

@@ -10,11 +10,16 @@ app.use(express.json());
 // ---------- DATABASE CONFIG ----------
 // การตั้งค่าฐานข้อมูล
 const pool = mysql.createPool({
-  host: "192.168.1.250",
-  user: "north",
-  password: "Nakhon@112493317",
-  database: "h11249",
-  port: 3306,
+  // ใช้ process.env เพื่อดึงค่าจาก docker-compose
+  // ถ้าไม่มีค่าใน docker จะใช้ค่าหลัง || เป็นค่าสำรอง
+  host: process.env.DB_HOST || "192.168.1.250", 
+  user: process.env.DB_USER || "north",
+  password: process.env.DB_PASSWORD || "Nakhon@112493317",
+  database: process.env.DB_NAME || "h11249",
+  port: process.env.DB_PORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
 // ---------- TEST API ----------

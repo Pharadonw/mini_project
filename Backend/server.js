@@ -22,7 +22,7 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// ---------- TEST API ----------
+// ---------- TEST API ---------- ไม่ได้ใช้เเล้ว -------
 app.get("/api/patient", async (req, res) => {
   try {
     const [rows] = await pool.query(`SELECT fname, lname FROM patient LIMIT 10`);
@@ -40,7 +40,7 @@ app.get("/api/patient", async (req, res) => {
 // 1. SUMMARY (สรุปยอดคนไข้ ER)
 app.get("/api/dashboard/summary", async (req, res) => {
   const date = req.query.date;
-  // เงื่อนไข: นับทุกคน ยกเว้นคนที่ cancel (7) แต่ถ้านัลล์ (NULL) ให้นับด้วย
+  // เงื่อนไข: นับทุกคน ยกเว้นคนที่ cancel (7)คือเสียชีวิต  แต่ถ้านัลล์ (NULL) ให้นับด้วย ลืมใส้ 
   const whereCondition = `WHERE DATE(vstdate) = ? AND (er_leave_status_id != '7' OR er_leave_status_id IS NULL)`;
 
   const triageSql = `
@@ -64,7 +64,7 @@ app.get("/api/dashboard/summary", async (req, res) => {
     GROUP BY er_emergency_type
     ORDER BY FIELD(triage, 'Resuscitation','Emergency','Urgency','Semi-Urgency','Non-Urgency')
   `;
-
+// เเบ่ง ตัวเลข
   const totalsSql = `
     SELECT
       COUNT(*) AS total,
@@ -89,7 +89,7 @@ app.get("/api/dashboard/summary", async (req, res) => {
   }
 });
 
-// 2. SERIES (กราฟตามเวร)
+// 2. SERIES (กราฟตามเวร) ไม่ได้ใช้เเล้ว 
 app.get("/api/dashboard/series", async (req, res) => {
   const date = req.query.date;
   const sql = `

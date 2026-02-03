@@ -6,6 +6,9 @@ import List from "./components/List.jsx";
 import Refer from "./components/Refer.jsx"; 
 import { Routes, Route } from "react-router-dom";
 import Admit from "./components/Admit.jsx";
+import Charts from "./components/Charts1.jsx";
+import WeeklyChart from "./components/WeeklyChart";
+import Charts1 from "./components/Charts1.jsx";
 
 export default function App() {
   return (
@@ -19,6 +22,8 @@ export default function App() {
         <Route path="/Refercase" element={<Refer/>} />
         <Route path="*" element={<div style={{padding:16}}>Not Found</div>} />
       </Routes>
+      <Charts1/>
+      <WeeklyChart/>
     </>
   );
 }

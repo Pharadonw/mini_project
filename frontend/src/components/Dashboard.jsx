@@ -50,11 +50,8 @@ function formatThaiDateFull(dateStr) {
   return `${d.getDate()} / ${months[d.getMonth()]} / ${d.getFullYear() + 543}`;
 }
 
-// 🔥 เพิ่มฟังก์ชันนี้สำหรับตัดเวลาทิ้ง (แสดงแค่วันที่แบบสั้น)
 function formatThaiDateShort(dateStr) {
   if (!dateStr) return "-";
-  // ตัดเวลาทิ้ง (เอาแค่ส่วนหน้าช่องว่าง) 
-  // เช่น "2025-12-19 00:00:00" -> "2025-12-19"
   const datePart = String(dateStr).split(" ")[0]; 
   const [year, month, day] = datePart.split("-");
   
@@ -76,6 +73,9 @@ export default function Dashboard() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [rows, setRows] = useState([]);
   const [live, setLive] = useState([]);
+
+  // 🔥 1. เพิ่ม State สำหรับควบคุมการย่อ/ขยาย (false = ย่อเหลือ 3 แถว)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -143,6 +143,9 @@ export default function Dashboard() {
       </div>
     </div>
   );
+
+  // 🔥 2. คำนวณรายการที่จะแสดง (ถ้า isExpanded=true เอาหมด, ถ้า false เอาแค่ 3 อันแรก)
+  const displayedLiveRows = isExpanded ? live : live.slice(0, 3);
 
   return (
     <div className="flex flex-col gap-6 p-4 bg-gray-50 min-h-screen">
@@ -213,19 +216,19 @@ export default function Dashboard() {
       </div>
 
       {/* --- Last 10 Update --- */}
-      <div className="mt-2">
+      <div className="mt-2 pb-10"> {/* เพิ่ม padding-bottom กันตกขอบ */}
         <div className="flex justify-between items-end mb-3">
              <h2 className="text-lg font-bold text-gray-700 flex items-center gap-2">
                 <span className="w-2 h-6 bg-red-500 rounded-sm inline-block"></span>
-                Last 10 Updates
+                อัปเดทล่าสุด
              </h2>
              <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded border">
-                อัปเดทล่าสุด: {new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})} น.
+                เวลาอัปเดทล่าสุด: {new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})} น.
              </span>
         </div>
         
-        <div className="overflow-x-auto bg-white shadow-sm rounded-lg border border-gray-200">
-          <table className="table w-full">
+        <div className="overflow-x-auto bg-white shadow-sm rounded-lg border border-gray-200 flex flex-col">
+          <table className="table w-full mb-0">
             <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
               <tr>
                 <th className="font-semibold py-3 pl-4 text-left">รหัสการเข้ารับบริการ (VN)</th>
@@ -235,12 +238,12 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {live.map((r, idx) => (
+              {/* 🔥 3. ใช้ displayedLiveRows แทน live */}
+              {displayedLiveRows.map((r, idx) => (
                 <tr key={idx} className="hover:bg-indigo-50 transition-colors duration-150">
                   <td className="font-mono text-indigo-600 font-medium text-sm pl-4 py-3">{r.vn}</td>
                   <td className="text-center"><TriageBadge value={r.triage} /></td>
                   <td className="text-center"><PtTypeBadge value={r.pt_type} /></td>
-                  {/* 🔥 เรียกใช้ฟังก์ชันตัดเวลาทิ้งตรงนี้ */}
                   <td className="text-right text-xs text-gray-500 pr-4">{formatThaiDateShort(r.date_only)}</td>
                 </tr>
               ))}
@@ -249,6 +252,27 @@ export default function Dashboard() {
               )}
             </tbody>
           </table>
+
+          {/* 🔥 4. ส่วนปุ่ม Dropdown/Toggle แสดงเมื่อข้อมูลมีมากกว่า 3 แถว */}
+          {live.length > 3 && (
+            <button 
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="w-full py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-50 hover:text-indigo-800 transition-colors border-t border-gray-100 flex items-center justify-center gap-2 cursor-pointer focus:outline-none"
+            >
+              {isExpanded ? (
+                <>
+                   ย่อรายการ 
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                </>
+              ) : (
+                <>
+                   ดูทั้งหมด {live.length} รายการ 
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </>
+              )}
+            </button>
+          )}
+
         </div>
       </div>
     </div>

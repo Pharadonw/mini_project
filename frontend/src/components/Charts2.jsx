@@ -386,4 +386,4 @@ const Charts2 = ({ date: propDate }) => {
   );
 };
 
-export default Charts2;
+export default Charts2;    

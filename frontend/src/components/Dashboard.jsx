@@ -1,5 +1,7 @@
 // Dashboard.jsx
 import { useEffect, useMemo, useState } from "react";
+import Charts1 from "./Charts1";
+import Charts2 from "./Charts2";
 
 // --- Constants & Helpers ---
 const TRIAGE = {
@@ -74,7 +76,7 @@ export default function Dashboard() {
   const [rows, setRows] = useState([]);
   const [live, setLive] = useState([]);
 
-  // 🔥 1. เพิ่ม State สำหรับควบคุมการย่อ/ขยาย (false = ย่อเหลือ 3 แถว)
+  // ควบคุมการย่อ/ขยาย (false = ย่อเหลือ 3 แถว)
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
@@ -144,7 +146,6 @@ export default function Dashboard() {
     </div>
   );
 
-  // 🔥 2. คำนวณรายการที่จะแสดง (ถ้า isExpanded=true เอาหมด, ถ้า false เอาแค่ 3 อันแรก)
   const displayedLiveRows = isExpanded ? live : live.slice(0, 3);
 
   return (
@@ -215,8 +216,8 @@ export default function Dashboard() {
         </table>
       </div>
 
-      {/* --- Last 10 Update --- */}
-      <div className="mt-2 pb-10"> {/* เพิ่ม padding-bottom กันตกขอบ */}
+      {/* --- Last 10 Update (ย้ายขึ้นมาตรงนี้) --- */}
+      <div className="mt-2"> 
         <div className="flex justify-between items-end mb-3">
              <h2 className="text-lg font-bold text-gray-700 flex items-center gap-2">
                 <span className="w-2 h-6 bg-red-500 rounded-sm inline-block"></span>
@@ -238,7 +239,6 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {/* 🔥 3. ใช้ displayedLiveRows แทน live */}
               {displayedLiveRows.map((r, idx) => (
                 <tr key={idx} className="hover:bg-indigo-50 transition-colors duration-150">
                   <td className="font-mono text-indigo-600 font-medium text-sm pl-4 py-3">{r.vn}</td>
@@ -253,7 +253,6 @@ export default function Dashboard() {
             </tbody>
           </table>
 
-          {/* 🔥 4. ส่วนปุ่ม Dropdown/Toggle แสดงเมื่อข้อมูลมีมากกว่า 3 แถว */}
           {live.length > 3 && (
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
@@ -275,6 +274,13 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* --- Charts Section (รวมไว้ด้านล่างสุด) --- */}
+      <div className="flex flex-col gap-6 pb-10 mt-2">
+        <Charts1 date={date} />
+        <Charts2 />
+      </div>
+
     </div>
   );
 }
